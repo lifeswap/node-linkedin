@@ -1,7 +1,6 @@
 url   = require 'url'
-http  = require 'http'
-qs    = require 'querystring'
 
+request = require 'request'
 OAuth = require('oauth').OAuth
 
 BASE = 'https://api.linkedin.com/v1'
