@@ -50,10 +50,7 @@ module.exports = class LinkedIn
       headers: 'x-li-format': 'json'
     request params, (err, resp, body) =>
       return callback err, null if err
-      try
-        callback null, JSON.parse(body)
-      catch e
-        callback e, null
+      callback null, body
 
   #
   # Redirects to linkedin to retrieve the token
