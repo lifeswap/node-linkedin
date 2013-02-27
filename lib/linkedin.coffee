@@ -6,7 +6,7 @@ OAuth = require('oauth').OAuth
 BASE = 'https://api.linkedin.com/v1'
 
 module.exports = class LinkedIn
-  constructor: (@key, @secret, @redirect, scopes) ->
+  constructor: (@key, @secret, scopes) ->
     oauthBaseUrl = 'https://api.linkedin.com/uas/oauth'
     requestTokenUrl = oauthBaseUrl + '/requestToken'
     if scopes
@@ -18,7 +18,7 @@ module.exports = class LinkedIn
       @key
       @secret
       '1.0'
-      @redirect
+      null
       'HMAC-SHA1'
       null
       'Accept': '*/*', 'Connection': 'close'
@@ -60,7 +60,7 @@ module.exports = class LinkedIn
   # @param {Response} res
   # @param {Function} callback
   #
-  getAccessToken:  (req, res, callback) =>
+  getAccessToken:  (req, res, redirectUrl, callback) =>
     parsedUrl = url.parse req.url, true
     hasToken  = parsedUrl?.query?.oauth_token?
     hasSecret = req.session?.auth?.linkedin_oauth_token_secret?
@@ -79,7 +79,7 @@ module.exports = class LinkedIn
     # Request token
     else
       @oauth.getOAuthRequestToken(
-        oauth_callback: @redirect
+        oauth_callback: redirectUrl
         (err, oauth_token, oauth_token_secret, oauth_authorize_url, additionalParams) =>
           return callback err, null if err
           req.session.linkedin_redirect_url = req.url
